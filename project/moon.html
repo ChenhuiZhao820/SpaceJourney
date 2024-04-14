@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color:black;
+        }
+        .btn-container{
+            position: absolute;
+            top:70%;
+            left:47%;
+
+        }
+        .btn{
+            background-color:white;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: black;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+     <div class="btn-container">
+            <button class="btn" id="continueBtn">End my journey</button>
+        </div>
+    <script>
+        document.getElementById("continueBtn").addEventListener("click", function() {
+            window.location.href = "test_moon.html";
+        });
+    </script>
+</body>
+</html>
