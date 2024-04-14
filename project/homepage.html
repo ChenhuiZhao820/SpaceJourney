@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(to bottom right, black,#8484AE, #4E4EE4);
+        }
+        .btn-container{
+            position: absolute;
+            top:70%;
+            left:47%;
+
+        }
+        .btn{
+            background-color:white;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: black;
+            border: none;
+            border-radius: 10px;
+        }
+        .shooting-star {
+        position: absolute;
+        width: 10px; /* Increase the size of shooting stars */
+        height: 10px; /* Increase the size of shooting stars */
+        background:linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)); 
+        animation: moveShootingStar 2s linear; /* Added animation */
+    }
+        .typewriter {
+        position: absolute;
+        top: 56%; /* Adjust position */
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Play", sans-serif;
+        font-size: 24px;
+        color: white; /* Change text color */
+    }
+
+    @keyframes moveShootingStar {
+        from {
+            transform: translate(0, 0);
+        }
+        to {
+            transform: translate(100vw, 100vh); /* Move shooting star diagonally */
+        }
+    }
+        .title-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: moveTitle 2s ease-in-out infinite alternate;
+        }
+        @keyframes moveTitle {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+        .astronaut-container {
+            position: absolute;
+            bottom: 6em; /* Adjusted distance from bottom */
+            right: 8em; /* Adjusted distance from right */
+            animation: floatAstronaut 8s linear infinite alternate-reverse; /* Changed animation */
+        }
+        @keyframes floatAstronaut {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(200px, -200px); /* Adjusted diagonal movement */
+            }
+            100% {
+                transform: translate(400px, -400px); /* Adjusted diagonal movement */
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="galaxyCanvas"></canvas>
+    <div class="title-container">
+        <img src="SpaceJourney.png", style="width: 670px; height: auto";>
+    </div>
+    <div class="typewriter">
+        <p id="text1"></p>
+    </div>
+
+    <div class="astronaut-container">
+        <img src="astronaut.png" alt="Astronaut" style="width: 180px; height: auto;">
+    </div>
+     <div class="btn-container">
+            <button class="btn" id="playBtn">Start!</button>
+        </div>
+    <script>
+        const canvas = document.getElementById('galaxyCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Generate random stars with varying size and shape
+        const stars = [];
+        const numStars = 1000;
+        for (let i = 0; i < numStars; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = Math.random() * 1.5 + 1; // Random size (limited between 1 and 4)
+            stars.push({ x, y, radius});
+        }
+
+
+       
+        // Draw stars
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // Twinkle stars
+        function twinkleStars() {
+            stars.forEach(star => {
+                if (Math.random() > 0.95) { // 5% chance of twinkle
+                    star.radius += Math.random() * 2 - 1; // Random change in size
+                    star.radius = Math.max(1, Math.min(4, star.radius)); // Limit radius between 1 and 4
+                }
+            });
+        }
+        
+        // Add shooting stars
+        setInterval(() => {
+        const shootingStar = document.createElement('div');
+        shootingStar.classList.add('shooting-star');
+        shootingStar.style.top = `${Math.random() * window.innerHeight}px`;
+        shootingStar.style.left = `${Math.random() * window.innerWidth}px`;
+        document.body.appendChild(shootingStar);
+
+        setTimeout(() => {
+            shootingStar.remove();
+        }, 2000); // Remove shooting star after 2 seconds
+    }, 500); // Add shooting star every 0.5 seconds
+        // Animate stars
+        function animateStars() {
+            drawStars();
+            twinkleStars();
+            requestAnimationFrame(animateStars);
+        }
+
+        animateStars();
+
+        const texts = ["Explore and learn about our galaxy", "Start playing now"];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            const text = texts[textIndex];
+            if (isDeleting) {
+                document.getElementById("text1").textContent = text.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex <= 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                }
+            } else {
+                document.getElementById("text1").textContent = text.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === text.length) {
+                    isDeleting = true;
+                }
+            }
+
+            const typingSpeed = isDeleting ? 50 : 100; // Adjust typing speed
+            setTimeout(typeWriter, typingSpeed);
+        }
+
+        typeWriter();
+
+        document.getElementById("playBtn").addEventListener("click", function() {
+            window.location.href = "landing_page.html";
+        });
+    </script>
+</body>
+</html>

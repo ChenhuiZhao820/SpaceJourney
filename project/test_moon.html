@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Adventure Quiz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+        body {
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            margin: 0;
+            padding: 0;
+            background-image: url('image1_0.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }   
+        .npc-container {
+            flex: 0 0 auto;
+            margin-right: 20px;
+            animation: floatNPC 4s ease-in-out infinite alternate;
+        }
+         @keyframes floatNPC {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px); /* Adjust upward movement */
+            }
+            100% {
+                transform: translateY(0);
+            }
+         }
+        .npc-image {
+            width: 300px;
+        }
+        .conversation {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .btn-container {
+            position: relative;
+            width: calc(100% - 40px); /* Subtract padding */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            top:15%;
+            right:5px;
+        }
+        .btn {
+            margin: 5px;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: 2px solid;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="npc-container">
+        <img src="aliennpc.png" alt="Alien NPC" class="npc-image">
+    </div>
+    <div class="container">
+        <div class="conversation" id="conversation">
+            <p>NPC: Welcome back, <span id="playerName"></span>! I hope you enjoyed our adventure on the moon.</p>
+        </div>
+        <div class="btn-container">
+            <button class="btn" id="goBackBtn">Actually let's go back</button>
+            <button class="btn" id="continueBtn">I had lots of fun</button>
+        </div>
+    </div>
+    <script>
+        const playerName = sessionStorage.getItem('playerName');
+
+        // Update player name in the conversation
+        document.getElementById('playerName').textContent = playerName;
+
+        function npcSpeak(sentence) {
+            document.getElementById('conversation').innerHTML = "<p>Zorgon: " + sentence + "</p>";
+        }
+
+
+        document.getElementById('continueBtn').addEventListener('click', function() {
+            if (document.getElementById('continueBtn').textContent === "I had lots of fun") {
+                npcSpeak("That's fantastic to hear! To test your knowledge, I have a little quiz for you about the moon.");
+                document.getElementById('continueBtn').textContent = "I'm up for the challenge";
+                document.getElementById('goBackBtn').style.display = "block"; 
+            } else if (document.getElementById('continueBtn').textContent === "I'm up for the challenge") {
+                npcSpeak("The gravity on the Moon is much weaker than on Earth. It is about _______ of Earth's gravity. ");
+                document.getElementById('continueBtn').style.display = "none";
+                createGravityAnswerButtons(); // Call function to create answer buttons
+            }
+        });
+
+        // Add event listener for go back button
+        document.getElementById('goBackBtn').addEventListener('click', function() {
+            window.location.href = 'moon.html'; // Redirect to moon.html
+        });
+
+        //quiz part
+        let correctAnswerCount = 0;
+        // Function to create answer buttons
+        function createGravityAnswerButtons() {
+            const answers = ["1/6", "1/3", "1/2", "3/4"]; // Array of possible answers
+            const btnContainer = document.querySelector('.btn-container');
+
+            answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.className = 'btn';
+                button.addEventListener('click', function() {
+                    checkGravityAnswer(this.textContent); // Call function to check answer
+                    btnContainer.innerHTML = ''; // Clear answer buttons
+                });
+                btnContainer.appendChild(button);
+            });
+        }
+
+        // Function to check answer and display next question button
+    function checkGravityAnswer(answer) {
+        const container = document.querySelector('.container');
+        
+        if (answer === "1/6") {
+            npcSpeak("That's correct! Well done.");
+            correctAnswerCount++; // Increment the correct answer counter
+        } else {
+            npcSpeak("Oops, that's not the correct answer. The correct answer is 1/6.");
+        }
+        
+        const continueButton = document.createElement('button');
+        continueButton.textContent = "What's the next question";
+        continueButton.className = 'btn';
+        continueButton.addEventListener('click', function() {
+            npcSpeak("Next question: What is the cause of this weaker gravity?");
+            this.style.display = 'none'; // Hide the button after clicking
+            createGravityReasonAnswerButtons();
+        });
+        container.appendChild(continueButton);
+    }
+
+
+        // Function to create answer buttons
+        function createGravityReasonAnswerButtons() {
+            const answers = ["The moon's mass is smaller", "The moon is made of cheese", "The Moon is further from the center of the Earth"]; // Array of possible answers
+            const btnContainer = document.querySelector('.btn-container');
+
+            answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.className = 'btn';
+                button.addEventListener('click', function() {
+                    checkGravityReasonAnswer(this.textContent); // Call function to check answer
+                });
+                btnContainer.appendChild(button);
+            });
+        }
+
+        // Function to check answer
+        function checkGravityReasonAnswer(answer) {
+            const container = document.querySelector('.container');
+            if (answer === "The moon's mass is smaller") {
+                npcSpeak("That's correct! Well done.");
+                correctAnswerCount++; // Increment the correct answer counter
+            } else {
+                npcSpeak("No. This lower gravity is due to the Moon's smaller mass compared to Earth, resulting in weaker gravitational pull.");
+            }
+            const continueButton = document.createElement('button');
+            continueButton.textContent = "What's the next question";
+            continueButton.className = 'btn';
+            continueButton.addEventListener('click', function() {
+                npcSpeak("Next question: Does the moon has an atmosphere?");
+                this.style.display = 'none'; // Hide the button after clicking // Hide the button after clicking
+                createAtmosphereAnswerButtons();
+            });
+            container.appendChild(continueButton);
+                // Clear answer buttons
+            const btnContainer = document.querySelector('.btn-container');
+            btnContainer.innerHTML = '';
+
+        }
+
+        function createAtmosphereAnswerButtons() {
+            const answers = ["There is none", "Yes, just like the Earth", "Yes, slightly thinner", "Yes, but extremely thin"]; // Array of possible answers
+            const btnContainer = document.querySelector('.btn-container');
+
+            answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.className = 'btn';
+                button.addEventListener('click', function() {
+                    checkAtmosphereAnswer(this.textContent); // Call function to check answer
+                    btnContainer.innerHTML = ''; // Clear answer buttons
+                });
+                btnContainer.appendChild(button);
+            });
+        }
+
+        function checkAtmosphereAnswer(answer) {
+            const container = document.querySelector('.container');
+            if (answer === "Yes, but extremely thin") {
+                npcSpeak("That's correct! Well done.");
+                correctAnswerCount++; // Increment the correct answer counter
+            } else {
+                npcSpeak("The Moon does have a very thin atmosphere, but it's significantly less dense than Earth's atmosphere. This extremely thin atmosphere means that the Moon lacks the air pressure necessary to support human life ");
+            }
+            const continueButton = document.createElement('button');
+            continueButton.textContent = "What's the next question";
+            continueButton.className = 'btn';
+            continueButton.addEventListener('click', function() {
+                npcSpeak("Next question: which of the following is NOT the cause of the formation of lunar pits?");
+                this.style.display = 'none'; // Hide the button after clicking
+                createPitsAnswerButtons();
+            });
+            container.appendChild(continueButton);
+            const btnContainer = document.querySelector('.btn-container');
+            btnContainer.innerHTML = '';
+
+        }
+
+        function createPitsAnswerButtons() {
+            const answers = ["Volcanic activities", "Thermal Contractions", "Impact Craters", "Alien activities"]; // Array of possible answers
+            const btnContainer = document.querySelector('.btn-container');
+
+            answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.className = 'btn';
+                button.addEventListener('click', function() {
+                    checkPitAnswer(this.textContent); // Call function to check answer
+                    btnContainer.innerHTML = ''; // Clear answer buttons
+                });
+                btnContainer.appendChild(button);
+            });
+        }
+
+        function checkPitAnswer(answer) {
+            const container = document.querySelector('.container');
+            if (answer === "Alien activities") {
+                npcSpeak("That's correct! Well done.");
+                correctAnswerCount++; // Increment the correct answer counter
+            } else {
+                npcSpeak("Lunar pits can be formed by a variety of processes, including impacts from meteoroids or asteroids, collapse of subsurface structures like lava tubes, and thermal contractions of the lunar regolith. There is no evidence of alien activities being the reason of their formation, though ");
+            }
+            const continueButton = document.createElement('button');
+            continueButton.textContent = "What's the next question";
+            continueButton.className = 'btn';
+            continueButton.addEventListener('click', function() {
+                npcSpeak("Next question: which one of the following is NOT how the Moon orbits?");
+                this.style.display = 'none'; // Hide the button after clicking
+                createOrbitAnswerButtons();
+            });
+            container.appendChild(continueButton);
+            const btnContainer = document.querySelector('.btn-container');
+            btnContainer.innerHTML = '';
+
+        }
+        function createOrbitAnswerButtons() {
+            const answers = [" The Moon takes approximately 27.3 days to complete one orbit around the Earth", "The Moon's orbit is roughly elliptical", "The Moon orbits around the Earth due to the gravitational attraction between the two bodies.", "The Moon's orbit is not inclined relative to the plane of the Earth's orbit around the Sun"]; // Array of possible answers
+            const btnContainer = document.querySelector('.btn-container');
+
+            answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.className = 'btn';
+                button.addEventListener('click', function() {
+                    checkOrbitAnswer(this.textContent); // Call function to check answer
+                    btnContainer.innerHTML = ''; // Clear answer buttons
+                });
+                btnContainer.appendChild(button);
+            });
+        }
+        let howDidIDoClicked = false;
+        function checkOrbitAnswer(answer) {
+            const container = document.querySelector('.container');
+            if (answer === "The Moon's orbit is not inclined relative to the plane of the Earth's orbit around the Sun") {
+                npcSpeak("That's correct! Well done.");
+                correctAnswerCount++; // Increment the correct answer counter
+            } else if (answer === " The Moon takes approximately 27.3 days to complete one orbit around the Earth") {
+                npcSpeak("Wrong answer. What you have selected is a true fact: note that I asked for the false answer! The Moon takes approximately 27.3 days to complete one orbit around the Earth, a period known as its sidereal month.");
+            } else if (answer === "The Moon's orbit is roughly elliptical") {
+                npcSpeak("What you have selected is a true fact: note that I asked for the false answer! The Moon's orbit is roughly elliptical, meaning it follows a slightly oval-shaped path around the Earth. However, this orbit is very close to being circular.");
+            } else if (answer === "The Moon orbits around the Earth due to the gravitational attraction between the two bodies.") {
+                npcSpeak("What you have selected is a true fact: note that I asked for the false answer! The Moon orbits around the Earth due to the gravitational attraction between the two bodies. This orbit is a result of the interplay between the gravitational force pulling the Moon toward the Earth and the Moon's own velocity, which gives it the necessary momentum to maintain its path around the Earth.");
+            }
+            
+            const continueButton = document.createElement('button');
+            continueButton.textContent = "Alright";
+            continueButton.className = 'btn';
+            continueButton.addEventListener('click', function() {
+                npcSpeak("That's all!");
+                this.style.display = 'none'; // Hide the button after clicking
+                
+                const rateButton = document.createElement('button');
+                rateButton.textContent = "How did I do?";
+                rateButton.className = 'btn';
+                rateButton.addEventListener('click', function() {
+                    // Handle rating functionality
+                    conclusion(); // Replace with actual rating functionality
+                    howDidIDoClicked = true; // Set the flag to true
+                this.parentNode.removeChild(this); // Remove the button from the DOM
+            });
+            container.appendChild(rateButton);
+            });
+            container.appendChild(continueButton);
+
+            const btnContainer = document.querySelector('.btn-container');
+            btnContainer.innerHTML = '';
+        }
+
+    function conclusion(){
+        // Check if the counter exceeds 4
+        const container = document.querySelector('.container');
+        if (correctAnswerCount >= 4) {
+            npcSpeak("You have done a good job in the quiz, select a new destination!");
+            createDestinationButtons();
+
+        } else {
+            npcSpeak("It seems like there is still room for improvement")
+            createNextStepButtons();
+        }
+        // Remove the "How did I do?" button
+    const rateButton = document.querySelector('.btn-container button');
+    if (rateButton) {
+        rateButton.parentNode.removeChild(rateButton);
+    }
+    }
+        
+    // Function to create destination buttons
+function createDestinationButtons() {
+    clearButtons(); // Clear previous buttons
+    const destinations = ["Mercury", "Mars", "Venus", "Jupiter", "Saturn", "Neptune", "Uranus"];
+    const btnContainer = document.querySelector('.btn-container');
+
+    destinations.forEach(destination => {
+        const button = document.createElement('button');
+        button.textContent = destination;
+        button.className = 'btn';
+        button.addEventListener('click', function() {
+            // Handle destination selection
+            npcSpeak("You have selected " + destination + " as your new destination!");
+            clearButtons();
+        });
+        btnContainer.appendChild(button);
+    });
+}
+
+// Function to create next step buttons
+function createNextStepButtons() {
+    clearButtons(); // Clear previous buttons
+    const steps = ["Quit", "Take the quiz again", "Let's go back to the Moon"];
+    const btnContainer = document.querySelector('.btn-container');
+
+    steps.forEach(step => {
+        const button = document.createElement('button');
+        button.textContent = step;
+        button.className = 'btn';
+        button.addEventListener('click', function() {
+            // Handle next step selection
+            if (step === "Quit") {
+                window.location.href = 'homepage.html'; // Close the window
+            } else if (step === "Take the quiz again") {
+                window.location.reload(); // Reload the page to take the quiz again
+            } else if (step === "Let's go back to the Moon") {
+                window.location.href = 'moon.html'; // Redirect to the Moon page
+            }
+        });
+        btnContainer.appendChild(button);
+    });
+}
+
+// Function to clear previous buttons
+function clearButtons() {
+    const btnContainer = document.querySelector('.btn-container');
+    btnContainer.innerHTML = ''; // Remove all child elements
+}
+
+
+    </script>
+</body>
+</html>

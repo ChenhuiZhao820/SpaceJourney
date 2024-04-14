@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+        body, html {
+           font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            margin: 0;
+            padding: 0;
+            background-image: none;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color:black;
+        }
+        .btn-container{
+            position: absolute;
+            top:70%;
+            left:47%;
+
+        }
+        .btn2{
+            position: relative;
+            right:-120px;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: 2px solid;
+            border-radius: 5px;
+        }
+        .btn2:hover{
+            background-color: #0056b3;
+        }
+        .btn{
+            background-color:white;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: black;
+            border: none;
+            border-radius: 10px;
+        }
+        .overlay {
+            max-width: 400px;
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1; /* Ensure it's above the canvas */
+        }
+        .npc-container {
+            position: absolute;
+            left: 10px;
+            top: 150px;
+            animation: floatNPC 4s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+        @keyframes floatNPC {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px); /* Adjust upward movement */
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .npc-image {
+            width: 150px;
+        }
+        .conversation {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+     <canvas class = 'mooncanvas'></canvas>
+     <div class="btn-container">
+            <button class="btn" id="continueBtn">End my journey</button>
+        </div>
+    <div class="overlay">
+    <div class="npc-container">
+        <img src="aliennpc.png" alt="Alien NPC" class="npc-image" style="margin-right:30px;">
+    </div>
+    <div class="container">
+        <div class="conversation" id="conversation">
+            <p>Zorgon: We have arrived on the Moon! Let's explore around. Click on anywhere to learn more!</p>
+        </div>
+    </div>
+</div>
+    <script>
+        document.getElementById("continueBtn").addEventListener("click", function() {
+            window.location.href = "test_moon.html";
+        });
+    </script>
+
+    <script type="module" src="/main.js"></script>
+</body>
+</html>

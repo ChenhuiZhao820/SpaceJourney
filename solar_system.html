@@ -1,19 +1,182 @@
-
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            body {
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+        body {
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
             margin: 0;
-            overflow: hidden;
+            padding: 0;
+            background-image: none;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+        .container {
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative; /* Add this to make the button container position relative */
+        }
+        .npc-container {
+            position: absolute;
+            left: 10px;
+            top: 150px;
+            animation: floatNPC 4s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+        @keyframes floatNPC {
+            0% {
+                transform: translateY(0);
             }
-        </style>
-        <!-- <script src="https://web.cs.manchester.ac.uk/three/three.js-master/build/three.module.js"></script> -->
+            50% {
+                transform: translateY(-20px); /* Adjust upward movement */
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
 
-    </head>
-    <body>
-        <script type="module" src="object.js"></script> 
-        <script type="module" src="solar_system.js"></script>
-    </body>
+        .npc-image {
+            width: 150px;
+        }
+        .conversation {
+            margin-bottom: 20px;
+        }
+        .btn-container {
+            text-align: right; /* Align buttons to the right */
+            margin-top: 20px; /* Add some margin from the top */
+            margin-right: 20px; /* Add some margin from the right */
+        }
+        .btn {
+            margin: 5px;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: 2px solid;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        canvas {
+            display: block;
+        }
+        .overlay {
+            max-width: 400px;
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1; /* Ensure it's above the canvas */
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <div class="npc-container">
+        <img src="aliennpc.png" alt="Alien NPC" class="npc-image" style="margin-right:30px;">
+    </div>
+    <div class="container">
+        <div class="conversation" id="conversation">
+            <p>Zorgon: Behold! This is a map of the solar system, comprising the Sun, eight planets, and an assortment of moons, asteroids, and comets. try to zoom in and take a close look</p>
+        </div>
+        <div class="btn-container">
+            <button class="btn" id="continueBtn">Whoa</button>
+        </div>
+    </div>
+</div>
+<script>
+    function npcSpeak(sentence) {
+        const conversation = document.getElementById('conversation');
+        if (conversation) {
+            conversation.innerHTML = "<p>Zorgon: " + sentence + "</p>";
+        }
+    }
 
+    const continueBtn = document.getElementById('continueBtn');
+    if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+            console.log("Button clicked");
+            if (continueBtn.textContent === "Whoa") {
+                npcSpeak("Now, let us delve into the intricate dance of the planets around our radiant star. Picture the Sun as the conductor, and the planets as graceful dancers following a choreographed routine along their orbits.");
+                continueBtn.textContent = "Hmmm";
+            } else if (continueBtn.textContent === "Hmmm") {
+                npcSpeak("Each planet, with its own distinct personality and composition, orbits the Sun in an elliptical path, a result of the interplay between gravitational forces and momentum. From the swift, innermost planet Mercury, to the distant and enigmatic Neptune, each world traces its own unique trajectory through the cosmic expanse.");
+                npcSpeak("Mercury, the closest planet to the Sun, races around its orbit at a mind-boggling speed of about 47.87 kilometers per second, completing its journey in just 88 Earth days. Compare that to Earth, which travels at a relatively sedate pace of about 29.78 kilometers per second, taking a leisurely 365.25 days to complete its orbit.");
+                npcSpeak("And then we can learn about...")
+                clearButtons();
+                createOptions();
+            } else if (continueBtn.textContent === "What about....") {
+                window.location.href = "map.html"; 
+            }
+        });
+    }
+    function clearButtons() {
+    const btnContainer = document.querySelector('.btn-container');
+    btnContainer.innerHTML = ''; // Remove all child elements
+}
+
+    function createOptions() {
+        const answers = ["Venus", "Mars", "Jupiter", "the Moon", "Neptune", "Uranus"]; // Array of possible answers
+        const btnContainer = document.querySelector('.btn-container');
+
+        answers.forEach(answer => {
+            const button = document.createElement('button');
+            button.textContent = answer;
+            button.className = 'btn';
+            button.addEventListener('click', function() {
+                checkOptionAnswer(this.textContent); // Call function to check answer
+                btnContainer.innerHTML = ''; // Clear answer buttons
+            });
+            btnContainer.appendChild(button);
+        });
+    }
+
+    function checkOptionAnswer(answer) {
+        const container = document.querySelector('.container');
+        if (answer === "Venus") {
+            npcSpeak("Venus, our neighboring planet, may not be the closest to the Sun, but its orbit is anything but leisurely. Clocking in at about 35.02 kilometers per second, it completes its orbit in approximately 225 Earth days.");
+        } else if (answer === "Jupiter") {
+            npcSpeak("Jupiter, the largest planet, boasts an orbit that is truly vast. It travels at a speed of about 13.07 kilometers per second, but due to its immense distance from the Sun, it takes nearly 12 Earth years to complete a single orbit.");
+        } else if (answer === "Mars") {
+            npcSpeak("Mars, often called the Red Planet due to its rusty appearance, orbits the Sun at a speed of approximately 24.077 kilometers per second. Though slower than Earth, Mars still manages to complete its orbit in about 687 Earth days.");
+        } else if (answer === "the Moon") {
+            npcSpeak("The Moon, Earth's faithful companion, orbits our planet with graceful elegance, completing its journey in approximately 27.3 Earth days. Unlike the planets, which orbit the Sun, the Moon orbits around Earth, forming a celestial pas de deux with our home planet.");
+        } else if (answer === "Uranus") {
+            npcSpeak("Ah, Uranus, the mysterious ice giant! One of the most intriguing aspects of Uranus' orbit is its extreme tilt. While most planets in our solar system have relatively modest axial tilts, Uranus marches to the beat of its own drum, rotating on its side at an angle of about 98 degrees relative to its orbital plane.");
+        } else if (answer === "Neptune") {
+            npcSpeak("And then there's Neptune, the most distant planet in our solar system. Despite its great distance, Neptune maintains a steady pace, orbiting the Sun at approximately 5.43 kilometers per second. However, due to its immense distance from the Sun, it takes a whopping 164.79 Earth years to complete its orbit.");
+        }
+        const continueButton = document.createElement('button');
+        continueButton.textContent = "Let's go to the Moon like you said!";
+        continueButton.className = 'btn';
+        continueButton.addEventListener('click', function() { 
+            npcSpeak("Try selecting the Moon from the map!");
+            this.style.display = 'none'; // Hide the button after clicking
+        });
+        container.appendChild(continueButton);
+    }
+</script>
+ <script type="module" src="object.js"></script> 
+<script type="module" src="solar_system.js"></script>
+</body>
 </html>

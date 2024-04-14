@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Adventure Map</title>
+</head>
+<body>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+        body {
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            margin: 0;
+            padding: 0;
+            background-image: url('image1_0.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+        }   
+         .npc-container {
+            flex: 0 0 auto;
+            margin-right: 20px;
+            animation:floatNPC 4s ease-in-out infinite alternate;
+        }
+        @keyframes floatNPC {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px); /* Adjust upward movement */
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .npc-image {
+            width: 300px;
+        }
+        .conversation {
+            margin-bottom: 20px;
+        }
+        .btn-container {
+            text-align: right;
+        }
+        .btn {
+            margin: 5px;
+            font-family: "Play", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            padding: 8px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: 2px solid;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .arrow-icon {
+            position: absolute;
+            top: 50%;
+            right: -30px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+    </style>
+    <div class="npc-container">
+            <img src="aliennpc.png" alt="Alien NPC" class="npc-image">
+        </div>
+    <div class="container">
+        <div class="conversation" id="conversation">
+            <p>Zorgon: Now, here is a map of our solar system. All planets orbiting around the Sun, and some planet have their moons orbiting around them. Select the moon of your planet, the Earth: that will be our destination!</p>
+        </div>
+        <div class="btn-container">
+            <button class="btn" id="continueBtn">Let's Go</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById("continueBtn").addEventListener("click", function() {
+            window.location.href = "moon.html";
+        });
+    </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import { OrbitControls } from "https://web.cs.manchester.ac.uk/three/three.js-ma
 let width = window.innerWidth
 let height = window.innerHeight
 
+
 class Sphere extends THREE.Mesh {
     constructor(size, movspeed, rot_speed, xorbit, yorbit ,texture_path) {
       super()
@@ -832,3 +833,4 @@ function animate(){
     renderer.render(scene,camera);
     requestAnimationFrame(animate);
 }
+
