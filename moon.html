@@ -11,6 +11,7 @@
             padding: 0;
             overflow: hidden;
             height: 100%;
+            overflow: hidden;
         }
         canvas {
             position: absolute;
@@ -39,9 +40,11 @@
             border: none;
             border-radius: 10px;
         }
+        
     </style>
 </head>
 <body>
+     <canvas class = 'mooncanvas'></canvas>
      <div class="btn-container">
             <button class="btn" id="continueBtn">End my journey</button>
         </div>
@@ -50,5 +53,7 @@
             window.location.href = "test_moon.html";
         });
     </script>
+
+    <script type="module" src="/main.js"></script>
 </body>
 </html>
