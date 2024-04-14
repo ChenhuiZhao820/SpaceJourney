@@ -3,7 +3,8 @@ import * as THREE from "https://web.cs.manchester.ac.uk/three/three.js-master/bu
 import { OrbitControls } from "https://web.cs.manchester.ac.uk/three/three.js-master/examples/jsm/controls/OrbitControls.js";
 
 
-
+let width = window.innerWidth
+let height = window.innerHeight
 
 class Sphere extends THREE.Mesh {
     constructor(size, movspeed, rot_speed, xorbit, yorbit ,texture_path) {
@@ -27,16 +28,21 @@ class Sphere extends THREE.Mesh {
 
 
 
-        
-
-
-       
-
       this.active = false
     }
+
+
+    resetPosition(){
+        this.position.x=0;// = new THREE.Vector3(0,0,0);
+        this.position.y=0;
+        this.position.z=0;
+    }
+    
   
     render() {
-      this.rotation.y += this.rotationSpeed;
+
+
+      this.rotation.y += this.rotationSpeed * rotationMultiplier;
 
       var time = timeSpeed * performance.now();
 
@@ -44,6 +50,7 @@ class Sphere extends THREE.Mesh {
         var newPoint = this.orbitPoints.getPoint((time * this.speed) % 1 );
         this.position.x = newPoint.x;
         this.position.y = newPoint.y;
+
 
     }
   
@@ -60,9 +67,14 @@ class Sphere extends THREE.Mesh {
   
     onClick(e) {
         console.log("object clicked");
-      this.cubeActive = !this.cubeActive;
+        redirect("redirect.html");
+    //   this.cubeActive = !this.cubeActive;
     }
   }
+
+
+
+
 
   class Group extends THREE.Group{
 
@@ -72,16 +84,19 @@ class Sphere extends THREE.Mesh {
   
             objects.forEach( object => {
                 this.add(object);
+                //object.resetPosition();//position = new THREE.Vector3(0,0,0);
             });
 
           this.rotationSpeed =  rot_speed;
           this.speed = movspeed;
+
+          this.orbitX = xorbit;
+          this.orbitY = yorbit;
   
           var curvestart = Math.random()*2*Math.PI;
           this.orbitPoints = new THREE.EllipseCurve(0,0,this.orbitX,this.orbitY, curvestart, curvestart+2*Math.PI  );
   
-          this.orbitX = xorbit;
-          this.orbitY = yorbit;
+        
   
   
          
@@ -90,7 +105,7 @@ class Sphere extends THREE.Mesh {
       }
     
       render() {
-        this.rotation.y += this.rotationSpeed;
+        this.rotation.y += this.rotationSpeed+ rotationMultiplier;
   
         var time = timeSpeed * performance.now();
   
@@ -98,6 +113,8 @@ class Sphere extends THREE.Mesh {
           var newPoint = this.orbitPoints.getPoint((time * this.speed) % 1 );
           this.position.x = newPoint.x;
           this.position.y = newPoint.y;
+
+
       }
     
 
@@ -217,97 +234,133 @@ var neptuneRotationSpeed = 17.24;
 
 const loader = new THREE.TextureLoader();
 
-var sunTexture = loader.load("sun_texture.jpg");
-var moonTexture = loader.load("moon_texture.jpg");
-var mercuryTexture = loader.load("mercury_texture.jpg");
-var venusTexture = loader.load("venus_texture.webp");
-var earthTexture = loader.load("earth_texture.jpg");
-var marsTexture = loader.load("mars_texture.jpg");
-var jupiterTexture = loader.load("jupiter_texture.jpg");
-var saturnTexture = loader.load("saturn_texture.jpg");
-var saturnRingsTexture = loader.load("saturn_rings_texture.png");
+var sunTexture = loader.load("textures/sun_texture.jpg");
+// var moonTexture = loader.load("moon_texture.jpg");
+// var mercuryTexture = loader.load("mercury_texture.jpg");
+// var venusTexture = loader.load("venus_texture.webp");
+// var earthTexture = loader.load("earth_texture.jpg");
+// var marsTexture = loader.load("mars_texture.jpg");
+// var jupiterTexture = loader.load("jupiter_texture.jpg");
+// var saturnTexture = loader.load("saturn_texture.jpg");
+// var saturnRingsTexture = loader.load("saturn_rings_texture.png");
 
-var uranusTexture = loader.load("uranus_texture.jpg");
-var neptuneTexture = loader.load("neptune_texture.jpg");
-
-
+// var uranusTexture = loader.load("uranus_texture.jpg");
+// var neptuneTexture = loader.load("neptune_texture.jpg");
 
 
-var backgroundTexture = loader.load("background_texture5.jpg");
+
+
+// var backgroundTexture = loader.load("textures/background_texture5.jpg");
 
 
 var mouse = new THREE.Vector2()
 
 var raycaster = new THREE.Raycaster()
 
-
+var intersects = [];
 
 
 // events
-// window.addEventListener('pointermove', (e) => {
-//     console.log("mouse moved")
+window.addEventListener('pointermove', (e) => {
+    console.log("mouse moved")
 
 
-//     mouse.set((e.clientX / width) * 2 - 1, -(e.clientY / height) * 2 + 1)
-//     raycaster.setFromCamera(mouse, camera)
-//     intersects = raycaster.intersectObjects(scene.children, true)
+    mouse.set((e.clientX / width) * 2 - 1, -(e.clientY / height) * 2 + 1)
+    raycaster.setFromCamera(mouse, camera)
+    intersects = raycaster.intersectObjects(scene.children, true)
   
-//     // If a previously hovered item is not among the hits we must call onPointerOut
-//     Object.keys(hovered).forEach((key) => {
-//       const hit = intersects.find((hit) => hit.object.uuid === key)
-//       if (hit === undefined) {
-//         const hoveredItem = hovered[key]
-//         if (hoveredItem.object.onPointerOver) hoveredItem.object.onPointerOut(hoveredItem)
-//         delete hovered[key]
-//       }
-//     })
+    // // If a previously hovered item is not among the hits we must call onPointerOut
+    // Object.keys(hovered).forEach((key) => {
+    //   const hit = intersects.find((hit) => hit.object.uuid === key)
+    //   if (hit === undefined) {
+    //     const hoveredItem = hovered[key]
+    //     if (hoveredItem.object.onPointerOver) hoveredItem.object.onPointerOut(hoveredItem)
+    //     delete hovered[key]
+    //   }
+    // })
   
-//     intersects.forEach((hit) => {
-//       // If a hit has not been flagged as hovered we must call onPointerOver
-//       if (!hovered[hit.object.uuid]) {
-//         hovered[hit.object.uuid] = hit
-//         if (hit.object.onPointerOver) hit.object.onPointerOver(hit)
-//       }
-//       // Call onPointerMove
-//       if (hit.object.onPointerMove) hit.object.onPointerMove(hit)
-//     })
-// });
+    // intersects.forEach((hit) => {
+    //   // If a hit has not been flagged as hovered we must call onPointerOver
+    //   if (!hovered[hit.object.uuid]) {
+    //     hovered[hit.object.uuid] = hit
+    //     //if (hit.object.onPointerOver) hit.object.onPointerOver(hit)
+    //   }
+    //   // Call onPointerMove
+    //   if (hit.object.onPointerMove) hit.object.onPointerMove(hit)
+    // })
+});
 
 
 window.addEventListener('click', (e) => {
     console.log("mouse clicked");
-    // intersects.forEach((hit) => {
-    //   // Call onClick
-    //   if (hit.object.onClick) hit.object.onClick(hit)
-    // })
+    intersects.forEach((hit) => {
+      // Call onClick
+      if (hit.object.onClick) hit.object.onClick(hit)
+    })
   });
 
 
 init();
 animate();
 
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
+var mercury = new Sphere(20,4.15,10,539.5,611.5,"textures/mercury_texture.jpg");
+var venus = new Sphere(50,1.62,10,924,928.5,"textures/venus_texture.webp");
 
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
-// var mercury = new Sphere(400,10,10,300,300,"jupiter_texture.jpg");
-var mercury = new Sphere(40,0,0,0,0,"mercury_texture.jpg");
+var earth = new Sphere(50,1,0,100,100,"textures/earth_texture.jpg");
+var moon = new Sphere(8,1,0,70,70,"textures/moon_texture.jpg");
 
 
+var mars = new Sphere(26,0.53,10,1400,1450,"textures/mars_texture.jpg");
 
-var test = new Sphere(15,1,1,60,60,"jupiter_texture.jpg");
-scene.add(test);
+var jupiter = new Sphere(150,0.25,10,1850,1950,"textures/jupiter_texture.jpg");
+var saturn = new Sphere(120,0.3,10,2320,2340,"textures/saturn_texture.jpg");
+var uranus = new Sphere(90,0.15,10,2950,2980,"textures/uranus_texture.jpg");
+var neptune = new Sphere(65,0.12,10,3350,3390,"textures/neptune_texture.jpg");
+
+
 scene.add(mercury);
+scene.add(venus);
 
 
-var group = new Group(10,5,400,400,[mercury,test])
+scene.add(moon);
+scene.add(earth);
+var earthSystem = new Group(0,0,1200,1200,[moon,earth]);
+
+
+scene.add(earthSystem);
+
+console.log(moon);
+console.log(earthSystem);
+console.log(earth);
+
+scene.add(mars);
+scene.add(jupiter);
+scene.add(saturn);
+scene.add(uranus);
+
+scene.add(neptune);
+
+
+
+
+// var center = new Sphere(50, 0, 0, 0, 0, "sun_texture.jpg");
+
+// var mercury = new Sphere(40,0,1,0,0,"mercury_texture.jpg");
+
+
+
+// var test = new Sphere(10,10,0,120,120,"jupiter_texture.jpg");
+// scene.add(center);
+
+// scene.add(test);
+// scene.add(mercury);
+
+
+// var group = new Group(1,0,500,520,[test,mercury]);
 // var test = new Sphere(200,50,10,300,300,"jupiter_texture.jpg");
 
 
-scene.add(group);
+// scene.add(group);
 
 
 function init(){
@@ -341,6 +394,11 @@ function init(){
     trackingOrbit = earthSystemMesh;
 
 
+}
+
+
+function redirect(path){
+    window.location.pathname= path;
 }
 
 
@@ -595,7 +653,7 @@ function createNeptune(){
 
 
 function createSun(){
-    sunGeometry= new THREE.SphereGeometry(109,400,200);
+    sunGeometry= new THREE.SphereGeometry(400,400,400);
 
     sunMaterial = new THREE.MeshStandardMaterial(
                     {
@@ -614,29 +672,29 @@ function createSun(){
 
 function createSolarSystem(){
     createSun();
-    createMercury();
-    createVenus()
-    createEarthSystem();
-    createMars();
-    createJupiter();
-    createSaturnSystem();
-    createUranus();
-    createNeptune();
+    // createMercury();
+    // createVenus()
+    // createEarthSystem();
+    // createMars();
+    // createJupiter();
+    // createSaturnSystem();
+    // createUranus();
+    // createNeptune();
 
-    solarSystemMesh = new THREE.Group();
+    // solarSystemMesh = new THREE.Group();
 
-    solarSystemMesh.add(sunMesh);
-    solarSystemMesh.add(mercuryMesh);
-    solarSystemMesh.add(venusMesh);
-    solarSystemMesh.add(earthSystemMesh);
-    solarSystemMesh.add(marsMesh);
-    solarSystemMesh.add(jupiterMesh);
-    solarSystemMesh.add(saturnSystemMesh);
-    solarSystemMesh.add(uranusMesh);
-    solarSystemMesh.add(neptuneMesh);
+    // solarSystemMesh.add(sunMesh);
+    // solarSystemMesh.add(mercuryMesh);
+    // solarSystemMesh.add(venusMesh);
+    // solarSystemMesh.add(earthSystemMesh);
+    // solarSystemMesh.add(marsMesh);
+    // solarSystemMesh.add(jupiterMesh);
+    // solarSystemMesh.add(saturnSystemMesh);
+    // solarSystemMesh.add(uranusMesh);
+    // solarSystemMesh.add(neptuneMesh);
 
 
-    scene.add(solarSystemMesh);
+    // scene.add(solarSystemMesh);
 
 }
 
@@ -655,7 +713,7 @@ function createLight(){
     //light.position.set( 50, 50, 50 );
     scene.add(pointLight);
 
-    ambientLight = new THREE.AmbientLight( 0x404040,1 ); // soft white light
+    ambientLight = new THREE.AmbientLight( 0x404040,2 ); // soft white light
     scene.add(ambientLight);
 
 }
@@ -760,12 +818,11 @@ function animate(){
 
     scene.traverse((obj) => {
         if (obj.render) obj.render()
-      })
+      });
 
-    
-    movePlanets();
+    //movePlanets();
  
-   rotatePlanets();
+   //rotatePlanets();
 
   
 
