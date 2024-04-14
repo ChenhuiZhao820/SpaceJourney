@@ -240,19 +240,19 @@ var backgroundGeometry;
 var backgroundMaterial;
 var backgroundMesh;
 
-var mercury = new Sphere(4,4.15,10,52,62,"textures/mercury_texture.jpg","redirect.html");
-var venus = new Sphere(5,1.62,10,92.4,92.85,"textures/venus_texture.webp","redirect.html");
+var mercury = new Sphere(4,4.15,1/60,52,62,"textures/mercury_texture.jpg","redirect.html");
+var venus = new Sphere(5,1.62,1/243,92.4,92.85,"textures/venus_texture.webp","redirect.html");
 
 var earth = new Sphere(7,0,1,0,0,"textures/earth_texture.jpg","redirect.html");
 var moon = new Sphere(2.5,1,0,12,12,"textures/moon_texture.jpg","moon.html");
 
 
-var mars = new Sphere(5,0.53,10,140,145,"textures/mars_texture.jpg","redirect.html");
+var mars = new Sphere(5,0.53,1,140,145,"textures/mars_texture.jpg","redirect.html");
 
-var jupiter = new Sphere(15,0.25,10,185,195,"textures/jupiter_texture.jpg","redirect.html");
-var saturn = new Sphere(12,0.3,10,232,234,"textures/saturn_texture.jpg","redirect.html");
-var uranus = new Sphere(9,0.15,10,295,298,"textures/uranus_texture.jpg","redirect.html");
-var neptune = new Sphere(6.5,0.12,10,334,339,"textures/neptune_texture.jpg","redirect.html");
+var jupiter = new Sphere(15,0.25,2.2,185,195,"textures/jupiter_texture.jpg","redirect.html");
+var saturn = new Sphere(12,0.3,2.4,232,234,"textures/saturn_texture.jpg","redirect.html");
+var uranus = new Sphere(9,0.15,1.2,295,298,"textures/uranus_texture.jpg","redirect.html");
+var neptune = new Sphere(6.5,0.12,1.2,334,339,"textures/neptune_texture.jpg","redirect.html");
 
 
 scene.add(mercury);
